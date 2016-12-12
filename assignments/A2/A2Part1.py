@@ -26,3 +26,9 @@ def genSine(A, f, phi, fs, t):
         x (numpy array) = The generated sinusoid (use np.cos())
     """
     ## Your code here
+    
+    x = np.array()
+    n = np.arrange(0,t,t/fs)
+    x(n) = A * np.cos(2 * np.pi * f * n * (1/fs) + phi)
+    return x(n)
+
