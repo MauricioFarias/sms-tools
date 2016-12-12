@@ -27,8 +27,12 @@ def genSine(A, f, phi, fs, t):
     """
     ## Your code here
     
-    x = np.array()
-    n = np.arrange(0,t,t/fs)
-    x(n) = A * np.cos(2 * np.pi * f * n * (1/fs) + phi)
-    return x(n)
+    x = np.empty(t*fs)
+    print len(x)
+
+    time = np.arange(0,t,1.0/fs)
+    print len(time)
+
+    x = A * np.cos(2.0 * np.pi * f * time + phi)
+    return x
 
