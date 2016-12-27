@@ -63,3 +63,62 @@ def suppressFreqDFTmodel(x, fs, N):
     outputScaleFactor = sum(w)
     
     ## Your code here
+    
+    (mX, pX) = dftAnal(x, w, N)
+    
+    ## bin = (f * N) / fs
+       
+    Bin70hz = np.ceil((70.0 * N) / fs)
+    zerodB = -120
+    
+    mXfilt = mX.copy()
+    mXfilt[:Bin70hz].fill(zerodB)
+
+    y = dftSynth(mX, pX, w.size) * outputScaleFactor
+    yfilt = dftSynth(mXfilt, pX, w.size) * outputScaleFactor
+
+    #--------------------------------
+    time = 1.0    
+    # create figure
+    plt.figure(figsize=(12, 9))
+
+    # plot the sound fragment
+    plt.subplot(4,1,1)
+    plt.plot(time + np.arange(M)/float(fs), y)
+    plt.axis([time, time + M/float(fs), min(y), max(y)])
+    plt.ylabel('amplitude')
+    plt.xlabel('time (sec)')
+    plt.title('input sound: y')
+
+    # plot the sound fragment
+    plt.subplot(4,1,2)
+    plt.plot(time + np.arange(M)/float(fs), yfilt)
+    plt.axis([time, time + M/float(fs), min(yfilt), max(yfilt)])
+    plt.ylabel('amplitude')
+    plt.xlabel('time (sec)')
+    plt.title('input sound: yfilt')
+
+    # plot the magnitude spectrum
+    plt.subplot(4,1,3)
+    plt.plot(float(fs)*np.arange(mX.size)/float(N), mX, 'r')
+    plt.axis([0, fs/2.0, min(mX), max(mX)])
+    plt.title ('magnitude spectrum: mX')
+    plt.ylabel('amplitude (dB)')
+    plt.xlabel('frequency (Hz)')
+
+    # plot the magnitude spectrum
+    plt.subplot(4,1,4)
+    plt.plot(float(fs)*np.arange(mXfilt.size)/float(N), mXfilt, 'r')
+    plt.axis([0, fs/2.0, min(mXfilt), max(mXfilt)])
+    plt.title ('magnitude spectrum: mXfilt')
+    plt.ylabel('amplitude (dB)')
+    plt.xlabel('frequency (Hz)')
+
+    plt.tight_layout()
+    plt.ion()
+    plt.show()
+
+    #-------------------------------------
+
+    return (y, yfilt)
+    
