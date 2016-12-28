@@ -64,7 +64,7 @@ def suppressFreqDFTmodel(x, fs, N):
     
     ## Your code here
     
-    (mX, pX) = dftAnal(x, w, N)
+    mX, pX = dftAnal(x, w, N)
     
     ## bin = (f * N) / fs
        
@@ -72,11 +72,11 @@ def suppressFreqDFTmodel(x, fs, N):
     zerodB = -120
     
     mXfilt = mX.copy()
-    mXfilt[:Bin70hz].fill(zerodB)
+    mXfilt[:Bin70hz+1].fill(zerodB)
 
     y = dftSynth(mX, pX, w.size) * outputScaleFactor
     yfilt = dftSynth(mXfilt, pX, w.size) * outputScaleFactor
-
+    """
     #--------------------------------
     time = 1.0    
     # create figure
@@ -119,6 +119,6 @@ def suppressFreqDFTmodel(x, fs, N):
     plt.show()
 
     #-------------------------------------
-
+    """
     return (y, yfilt)
     

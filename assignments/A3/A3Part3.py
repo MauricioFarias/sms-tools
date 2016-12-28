@@ -52,15 +52,19 @@ def testRealEven(x):
     
     M = len(x)
     
-    hM1 = np.floor((M+1)/2)
-    hM2 = np.floor(M/2)
+    hM1 = int(np.floor((M+1)/2))
+    hM2 = int(np.floor(M/2))
     
+    pXexpected = np.zeros(M)
     dftbuffer = np.zeros(M)
     dftbuffer[:hM1] = x[hM2:]
     dftbuffer[-hM2:] = x[:hM2]
     X = fft(dftbuffer)
-
-    isRealEven = sum(abs(X.imag)) < 1e-6
+    #if sum(math.fabs(X.imag)) < 1e-6:
+    if np.allclose(X.imag,pXexpected,1e-6):    
+        isRealEven = "true"
+    else:
+        isRealEven = "false"
     mX = 20 * np.log10(abs(X[0 : (M/2) + 1]))
     return (isRealEven,dftbuffer,X)
 

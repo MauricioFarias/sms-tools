@@ -62,9 +62,9 @@ def optimalZeropad(x, fs, f):
     N = periodSamples * np.ceil(M / periodSamples)    
 
     xn = np.zeros(N)    
-    xn[0:M] = x[0:M]
+    xn[:M] = x[:M]
     
-    print xn
+    #print xn
 
     hN1 = np.floor((N+1)/2)
     hN2 = np.floor(N/2)
@@ -73,8 +73,9 @@ def optimalZeropad(x, fs, f):
     dftbuffer[:hN1] = xn[hN2:]
     dftbuffer[-hN2:] = xn[:hN2]
 
-    print dftbuffer
+    #print dftbuffer
     
     dft = fft(dftbuffer)
-    mX = 20 * np.log10(abs(dft[0 : (N/2) + 1]))
+    mX = 20 * np.log10(abs(dft[:(N/2)+1]))
     return mX
+
