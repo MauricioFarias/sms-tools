@@ -62,19 +62,35 @@ def computeSNR(inputFile, window, M, N, H):
     ## your code here
     
     # read input sound (monophonic with sampling rate of 44100)
-	fs, x = UF.wavread(inputFile)
+    fs, x = UF.wavread(inputFile)
+    w = get_window(window, M)
+    y = stft.stft(x, w, N, H)
+    if len(x) <> len(y):
+        print ' x ' + str(len(x)) + ' y ' + str(len(y))
+        return 0 ,0 
 
-	# compute analysis window
-	w = get_window(window, M)
+    #********************SNR1************************
+    Ex = sum(x**2)
 
-	# compute the magnitude and phase spectrogram
+    noise = abs(x-y)
+    Enoise = sum(noise**2)
+    SNR1 = 10*np.log10(Ex/Enoise)
 
-	mX, pX = STFT.stftAnal(x, w, N, H)
-	 
-	# perform the inverse stft
-	y = STFT.stftSynth(mX, pX, M, H)
-
+    #**********************SNR2***********************
+    xp = x[M:-M] 
+    yp = y[M:-M]
     
+    Exp = sum(xp**2)
+    
+    if len(xp) <> len(yp):
+        print ' x ' + str(len(x)) + ' xp ' + str(len(xp)) + ' yp ' + str(len(yp))
+        return 0 ,0 
+    noisep = abs(xp-yp)
+    Enoisep = sum(noisep**2)
+    SNR2 = 10*np.log10(Exp/Enoisep)
+
+    return SNR1, SNR2
+
 '''
 def main(inputFile = '../../sounds/piano.wav', window = 'hamming', M = 1024, N = 1024, H = 512):
 	"""

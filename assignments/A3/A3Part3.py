@@ -61,10 +61,12 @@ def testRealEven(x):
     dftbuffer[-hM2:] = x[:hM2]
     X = fft(dftbuffer)
     #if sum(math.fabs(X.imag)) < 1e-6:
+
     if np.allclose(X.imag,pXexpected,1e-6):    
-        isRealEven = "true"
+        isRealEven = True #"true"
     else:
-        isRealEven = "false"
+        isRealEven = False #"false"
+    
     mX = 20 * np.log10(abs(X[0 : (M/2) + 1]))
     return (isRealEven,dftbuffer,X)
 
