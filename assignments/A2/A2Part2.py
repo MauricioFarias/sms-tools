@@ -26,3 +26,6 @@ def genComplexSine(k, N):
         cSine (numpy array) = The generated complex sinusoid (length N)
     """
     ## Your code here
+    t = np.arange(0,N)
+    cSine = np.exp( -1j * 2.0 * np.pi * k * t / N)
+    return cSine

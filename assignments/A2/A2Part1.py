@@ -26,3 +26,13 @@ def genSine(A, f, phi, fs, t):
         x (numpy array) = The generated sinusoid (use np.cos())
     """
     ## Your code here
+    
+    x = np.empty(t*fs)
+    print len(x)
+
+    time = np.arange(0,t,1.0/fs)
+    print len(time)
+
+    x = A * np.cos(2.0 * np.pi * f * time + phi)
+    return x
+

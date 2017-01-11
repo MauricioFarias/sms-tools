@@ -1,4 +1,5 @@
 import numpy as np
+import A2Part2 as A2
 
 """
 A2-Part-3: Implement the discrete Fourier transform (DFT)
@@ -26,3 +27,17 @@ def DFT(x):
         X (numpy array) = The N point DFT of the input sequence x
     """
     ## Your code here
+    N = len(x)
+    
+    X = np.empty(0,dtype = complex)
+    
+    for k in xrange(N):
+        complexSine = A2.genComplexSine(k,N)
+        X = np.append( X , [x[0] + 0 * 1j]) 
+        for n in xrange(1,N):            
+            X[k] = X[k] + x[n] * complexSine[n]
+    
+    return X
+ 
+        
+            
