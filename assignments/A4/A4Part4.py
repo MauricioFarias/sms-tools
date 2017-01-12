@@ -85,3 +85,78 @@ def computeODF(inputFile, window, M, N, H):
     """
     
     ### your code here
+    
+    
+    # read input sound (monophonic with sampling rate of 44100)
+    fs, x = UF.wavread(inputFile)
+    w = get_window(window, M)
+    
+    mX, pX = stft.stftAnal(x, w, N, H)
+    
+    ## bin = (f * N) / fs
+    Bin0hz = 0
+    BinUp3000hz = int(np.ceil((3000.0 * N) / fs))
+    BinTo3000hz = int(np.floor((3000.0 * N) / fs))
+    Bin10000hz = int(np.ceil((10000.0 * N) / fs))
+    
+    Bins0hzbetween3000hz = np.arange(Bin0hz + 1,BinUp3000hz)
+    Bins3000hzbetween10000hz = np.arange(BinTo3000hz + 1,Bin10000hz)
+    
+    nFrames = mX[:,0].size                           # number of frames
+    mXlow = np.zeros(Bins0hzbetween3000hz.size)              # initialize low frecuency array
+    mXhigh = np.zeros(Bins3000hzbetween10000hz.size)              # initialize high frecuency array
+    engEnv = np.zeros((nFrames,2))                    # create energy envelopes array
+    ODF = np.zeros((nFrames,2))                    # create onset detection array
+                    
+    for i in range(nFrames):                         # iterate over all frames      
+        mXlow = np.take(mX[i,:], Bins0hzbetween3000hz)  # take only low frecuency bins
+        mXhigh = np.take(mX[i,:], Bins3000hzbetween10000hz)  # take only high frecuency bins
+
+        mXlowLinear = 10.0**(mXlow/20)              # transform db to linear
+        Elow = sum(mXlowLinear**2)                  # compute energy    
+        Edblow = 10*np.log10(Elow)                  # transform linear to db
+        engEnv[i,0] = Edblow                        # assign energy to right frame
+        
+        mXhighLinear = 10.0**(mXhigh/20)              # transform db to linear
+        Ehigh = sum(mXhighLinear**2)                  # compute energy   
+        Edbhigh = 10*np.log10(Ehigh)                  # transform linear to db
+        engEnv[i,1] = Edbhigh                      # assign energy to right frame
+
+        if i > 0:
+            ODFLow = engEnv[i,0] - engEnv[i-1,0]
+            ODFHigh = engEnv[i,1] - engEnv[i-1,1]
+            ODF[i,0] = ODFLow if ODFLow > 0.0 else 0.0
+            ODF[i,1] = ODFHigh if ODFHigh > 0.0 else 0.0
+            
+    #----plot the spectrum and low/high frecuencies energy
+    
+    plt.figure(1, figsize=(9.5, 6))
+
+    plt.subplot(211)
+    numFrames = int(mX[:,0].size)
+    frmTime = H*np.arange(numFrames)/float(fs)                             
+    binFreq = np.arange(N/2+1)*float(fs)/N                         
+    plt.pcolormesh(frmTime, binFreq, np.transpose(mX))
+    plt.title('mX ('+ inputFile + '), M='+str(M)+', N='+str(N)+', H='+str(H)+'')
+    plt.autoscale(tight=True)
+
+    plt.subplot(212)
+    numFrames = int(mX[:,0].size)
+    frmTime = H*np.arange(numFrames)/float(fs)                             
+    binFreq = np.arange(N/2+1)*float(fs)/N                         
+    #plt.plot(frmTime,np.transpose(ODF[:,0]),label='ODF low')
+    #plt.plot(frmTime,np.transpose(ODF[:,1]),label='ODF high')
+    plt.bar(frmTime,np.transpose(ODF[:,0]),width=frmTime/numFrames,label='ODF low',color='blue')
+    plt.bar(frmTime,np.transpose(ODF[:,1]),width=frmTime/numFrames,label='ODF high',color='green')
+    
+    plt.title('ODF low and high ('+ inputFile + '), M='+str(M)+', N='+str(N)+', H='+str(H)+'')
+    plt.autoscale(tight=True)
+
+    plt.tight_layout()
+    plt.legend()
+    plt.grid(True)
+    #plt.savefig('spectrogram.png')
+    plt.show()
+    
+    return ODF
+    
