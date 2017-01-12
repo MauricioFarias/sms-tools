@@ -81,8 +81,8 @@ def extractMainLobe(window, M):
     mX = 20 * np.log10(absX)                                # magnitude spectrum of positive frequencies in dB     
     pX = np.unwrap(np.angle(X[:hN]))                        # unwrapped phase spectrum of positive frequencies
     
-    plt.plot(np.append(mX[-hN:],mX[:hN]))
-    plt.show()
+    #plt.plot(np.append(mX[-hN:],mX[:hN]))
+    #plt.show()
     
     mXmainLobe = np.array([])
     mXmainLobe = np.append(mXmainLobe, np.array([mX[0]]))
