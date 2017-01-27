@@ -81,7 +81,14 @@ def selectFlatPhasePeak(pX, p, phaseDevThres):
             selectFlag (Boolean) = True, if the peak at index p is a mainlobe, False otherwise
     """
     #Your code here
+    std = np.std(pX[p-2:p+3])
     
+    if std < phaseDevThres:
+        selectFlag = True
+    else:
+        selectFlag = False
+    
+    return selectFlag
 
 ### Go through the code below and understand it, but do not modify anything ###
 def sineModelAnalEnhanced(inputFile= '../../sounds/sines-440-602-transient.wav'):
@@ -147,4 +154,5 @@ def sineModelAnalEnhanced(inputFile= '../../sounds/sines-440-602-transient.wav')
     plt.xlabel('Time (s)')
     plt.ylabel('Frequency (Hz)')
     plt.autoscale(tight=True)
+    plt.show()
     return tStamps, tfreq

@@ -36,16 +36,16 @@ def exploreSineModel(inputFile='../../sounds/multiSines.wav'):
             return True
             Discuss on the forum!
     """
-    window='hamming'                            # Window type
-    M=3001                                      # Window size in sample
-    N=4096                                      # FFT Size
-    t=-80                                       # Threshold                
-    minSineDur=0.02                             # minimum duration of a sinusoid
-    maxnSines=15                                # Maximum number of sinusoids at any time frame
-    freqDevOffset=10                            # minimum frequency deviation at 0Hz
+    window='blackmanharris'                          #blackman to blackmanharris  # Window type
+    M=4126                                    #3001 to 4126  # Window size in sample
+    N=8192                                   #4096   # FFT Size
+    t=-95                                     #-80 to -95  # Threshold                
+    minSineDur=0.1                #0.02 to 0.1       # minimum duration of a sinusoid
+    maxnSines=15                     #15 to 20           # Maximum number of sinusoids at any time frame
+    freqDevOffset=10                     #10 to 0       # minimum frequency deviation at 0Hz
     freqDevSlope=0.001                          # slope increase of minimum frequency deviation
-    Ns = 512                                    # size of fft used in synthesis
-    H = 128                                     # hop size (has to be 1/4 of Ns)
+    Ns = 512                            #512 to 128        # size of fft used in synthesis
+    H = 128                            #128 to 32         # hop size (has to be 1/4 of Ns)
     
     fs, x = UF.wavread(inputFile)               # read input sound
     w = get_window(window, M)                   # compute analysis window
